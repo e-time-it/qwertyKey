@@ -5,6 +5,7 @@ import uuid from 'uuid';
 import app from '../app.js';
 
 chai.use(chaiHttp);
+
 global.app = app;
 global.uuid = uuid;
 global.expect = chai.expect;
