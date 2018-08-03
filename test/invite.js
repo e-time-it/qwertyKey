@@ -18,13 +18,13 @@ describe('/api/invite TESTS', function() {
       request
         .post('/api/invite')
         .send({
-          'email': 'test@qk.com'
+          'email': 'test' + Math.random() + '@qk.com'
         })
         .end(function(err, res) {
           expect(err).to.be.null;
           expect(res).to.have.status(200);
           expect(res).to.be.json;
-          expect().to.be.string(res['invite_id']);
+          expect().to.be.string(res.body['invite_id']);
         });
     });
   });

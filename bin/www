@@ -4,9 +4,10 @@
  * Module dependencies.
  */
 
-var app = require('../app');
-var debug = require('debug');
-var http = require('http');
+import '../config/database';
+import app from '../app';
+import debug from 'debug';
+import http from 'http';
 
 const debugQK = debug('qwertyKey:server');
 

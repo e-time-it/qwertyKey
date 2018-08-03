@@ -1,6 +1,7 @@
-var express = require('express');
-var InviteModel = require ('../models/invite');
-var router = express.Router({});
+import express from 'express';
+import InviteModel from '../models/invite';
+
+const router = express.Router({});
 
 /*GET invite LIST*/
 router.get('/', function(req, res, next) {

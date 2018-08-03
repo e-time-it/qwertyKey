@@ -1,15 +1,13 @@
-var express = require ('express');
-var path = require ('path');
+import express from 'express';
+import path from 'path';
 //var favicon = require('serve-favicon');
-var logger = require ('morgan');
-var cookieParser = require ('cookie-parser');
-var bodyParser = require ('body-parser');
-
-require ('./config/database');
-
-var index = require ('./routes/index');
-var users = require ('./routes/users');
-var invites = require ('./routes/invites');
+import logger from 'morgan';
+import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
+import './config/database';
+import index from './routes/index';
+import users from './routes/users';
+import invites from './routes/invites';
 
 const app = express();
 

@@ -1,5 +1,5 @@
-var mongoose = require('mongoose');
-var validator = require('validator');
+import mongoose from 'mongoose';
+import validator from 'validator';
 
 const inviteSchema = new mongoose.Schema({
   email: {

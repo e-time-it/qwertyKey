@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "prestart": "node buildScripts/startMessage.js",
+    "prestart": "babel-node buildScripts/startMessage.js",
     "start": "./node_modules/.bin/npm-run-all --parallel security-check start-server",
-    "start-server": "node ./bin/www",
-    "test": "cross-env NODE_ENV=test mocha test/**/*.js",
+    "start-server": "babel-node ./bin/www",
+    "test": "cross-env NODE_ENV=test mocha --compilers js:babel-core/register test/**/*.js",
     "security-check": "nsp check",
     "share": "lt --port 3000"
   },

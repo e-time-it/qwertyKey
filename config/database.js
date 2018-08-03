@@ -1,5 +1,5 @@
-var mongoose = require('mongoose');
-var dbConfig = require('./database-local');
+import mongoose from 'mongoose';
+import dbConfig from './database-local';
 
 class Database {
   constructor() {
