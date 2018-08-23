@@ -1,13 +1,13 @@
-import express from 'express';
-import path from 'path';
+let express = require('express');
+let path = require('path');
 //var favicon = require('serve-favicon');
-import logger from 'morgan';
-import cookieParser from 'cookie-parser';
-import bodyParser from 'body-parser';
-import './config/database';
-import index from './routes/index';
-import users from './routes/users';
-import invites from './routes/invites';
+let logger = require('morgan');
+let cookieParser = require('cookie-parser');
+let bodyParser = require('body-parser');
+require('./config/database');
+let index = require('./routes/index');
+let users = require('./routes/users');
+let invites = require('./routes/invites');
 
 const app = express();
 
@@ -19,7 +19,7 @@ const app = express();
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -28,21 +28,21 @@ app.use('/api/user', users);
 app.use('/api/invite', invites);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  let err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+app.use(function (req, res, next) {
+    let err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 
 // error handler
-app.use(function(err, req, res) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+app.use(function (err, req, res) {
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.json(err);
+    // render the error page
+    res.status(err.status || 500);
+    res.json(err);
 });
 
 module.exports = app;

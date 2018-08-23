@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "prestart": "babel-node buildScripts/startMessage.js",
+    "prestart": "node buildScripts/startMessage.js",
     "start": "./node_modules/.bin/npm-run-all --parallel security-check start-server",
-    "start-server": "babel-node ./bin/www",
-    "test": "cross-env NODE_ENV=test mocha --compilers js:babel-core/register test/**/*.js",
+    "start-server": "node ./bin/www",
+    "test": "cross-env NODE_ENV=test mocha --exit  test/**/*.js",
     "security-check": "nsp check",
     "share": "lt --port 3000"
   },
@@ -23,11 +23,6 @@
     "validator": "^10.4.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.5",
-    "babel-preset-env": "^1.7.0",
-    "babel-register": "^6.26.0",
     "chai": "^4.1.2",
     "chai-http": "^4.0.0",
     "cross-env": "^5.2.0",

@@ -1,8 +1,8 @@
-//var supertest = require('supertest');
-import chai from 'chai';
-import chaiHttp from 'chai-http';
-import uuid from 'uuid';
-import app from '../app.js';
+// var supertest = require('supertest');
+let chai = require('chai');
+let chaiHttp = require('chai-http');
+let uuid = require('uuid');
+let app = require('../app.js');
 
 chai.use(chaiHttp);
 
