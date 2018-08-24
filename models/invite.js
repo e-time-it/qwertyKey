@@ -7,8 +7,12 @@ const inviteSchema = new mongoose.Schema({
         required: true,
         unique: true,
         lowercase: true,
-        validate: (value) => {
-            return validator.isEmail(value)
+        validate: {
+            validator: (value) => {
+                return validator.isEmail(value)
+            },
+            message: 'email must be valid',
+            type: 'valid'
         }
     }
 });

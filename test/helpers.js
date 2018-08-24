@@ -9,4 +9,4 @@ chai.use(chaiHttp);
 global.app = app;
 global.uuid = uuid;
 global.expect = chai.expect;
-global.request = chai.request(app);
+global.request = chai.request(app).keepOpen();

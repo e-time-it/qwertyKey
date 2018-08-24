@@ -31,8 +31,36 @@ router.get('/:id', function (req, res) {
 router.post('/', function (req, res, next) {
     InviteModel.create(req.body, function (err, invite) {
         if (err) {
-            console.error(err);
-            next(err);
+            if (err.errors) {
+                let errors = [];
+                for (let eName in err.errors) {
+                    let eValue = err.errors[eName];
+                    errors.push({path: eValue.path, kind: eValue.kind, message: eValue.message});
+                }
+                res.status(400).send({status: 'error', code: '1001', errors: errors});
+            } else if (err.code === 11000) {
+                res
+                    .status(400)
+                    .send({
+                        status: 'error',
+                        code: '1003',
+                        errors: [{
+                            path: 'email',
+                            kind: 'duplicate',
+                            message: err.message
+                        }]
+                    });
+            } else {
+                res.status(400).send({
+                    status: 'error',
+                    code: '1000',
+                    errors: [{
+                        path: '',
+                        kind: 'unknown',
+                        message: err.message
+                    }]
+                });
+            }
         } else {
             res.send({invite_id: invite._id});
         }
