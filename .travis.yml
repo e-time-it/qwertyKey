@@ -1,3 +1,7 @@
 language: node_js
 node_js:
   - node
+services: mongodb
+before_script:
+    - cp config/database-local.dist.js config/database-local.js
+    - mongo qwertykey --eval 'db.createUser({user:"user",pwd:"password",roles:["readWrite"]});'
