@@ -62,19 +62,19 @@ router.post('/', function (req, res, next) {
                 });
             }
         } else {
-            res.send({invite_id: invite._id});
+            res.send(invite);
         }
     });
 });
 
 /*PUT invite UPDATE*/
 router.put('/:id', function (req, res) {
-    res.status(404).send('not found');
+    res.status(404).send('update an invite is not allowed/present operation');
 });
 
 /*DELETE invite DELETE*/
 router.delete('/:id', function (req, res) {
-    res.status(404).send('not found');
+    res.status(404).send('delete an invite is not allowed/present operation');
 });
 
 module.exports = router;
