@@ -33,7 +33,7 @@ describe('/api/user TESTS', function () {
     });
 
     describe('GET /api/user/id', function () {
-        it('get an invite', function (done) {
+        it('get a user', function (done) {
             request
                 .get('/api/user/' + fixedId)
                 .end(function (err, res) {

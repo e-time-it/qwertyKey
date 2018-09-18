@@ -17,6 +17,11 @@ const userSchema = mongoose.Schema({
             type: 'valid'
         }
     },
+    status: {
+        type: String,
+        enum: ['new', 'active', 'cancel'],
+        default: 'new'
+    },
     password: {
         type: String,
         required: true
