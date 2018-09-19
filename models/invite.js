@@ -20,6 +20,7 @@ const inviteSchema = new mongoose.Schema({
     inviteType: {
         type: String,
         enum: ['friend', 'resetPassword', 'selfRegistration'],
+        default: 'friend',
         required: true
     },
     status: {
@@ -33,21 +34,20 @@ const inviteSchema = new mongoose.Schema({
 inviteSchema.pre('save', function (next) {
     let invite = this;
     crypto.randomBytes(20, (err, buf) => {
-        let token = buf.toString('hex');
-        invite.resetPasswordToken = token;
+        invite.resetPasswordToken = buf.toString('hex');
         invite.resetPasswordExpires = Date.now() + 3600000; // 1 hour
         next();
     });
 });
 
-inviteSchema.post('save', function (next) {
-    let invite = this;
+inviteSchema.post('save', function (invite, next) {
     mailer.sendMail({
         from: 'qk@qk.org',
         to: invite.email,
         subject: 'Invite QK',
         text: `You received an invite to partecipate to QK party: ${invite.resetPasswordToken}`
-    }).catch(err => console.error('Fail to send mail: ', err));
+    }).then(() => {next()}).catch(err => console.error('Fail to send mail: ', err));
+
 });
 
 inviteSchema.statics.verifyPasswordToken = function (token, time = Date.now(), cb) {

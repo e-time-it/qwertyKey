@@ -1,6 +1,7 @@
 let express = require('express');
 let router = express.Router();
 let UserModel = require('../models/user');
+let InviteModel = require('../models/invite');
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
@@ -61,7 +62,17 @@ router.post('/', function (req, res, next) {
                 });
             }
         } else {
-            res.send(user);
+            InviteModel.create({
+                email: user.email,
+                inviteType: 'selfRegistration'
+            }, function(err, invite) {
+                if (err) {
+                    console.error(err);
+                    res.status(400).send(err);
+                } else {
+                    res.send(user);
+                }
+            });
         }
     });
 });

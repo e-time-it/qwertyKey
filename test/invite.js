@@ -1,10 +1,6 @@
 let mongoose = require('mongoose');
 let InviteModel = require('../models/invite');
 
-/**
- * Created by medd on 4/4/18.
- */
-
 const fixedId = '507f191e810c19729de860ea';
 const fixedEmail = 'testemail@qk.com';
 

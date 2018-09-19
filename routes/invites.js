@@ -1,5 +1,6 @@
 let express = require('express');
 let InviteModel = require('../models/invite');
+let UserModel = require('../models/user');
 
 const router = express.Router({});
 
@@ -16,13 +17,41 @@ router.get('/', function (req, res, next) {
 });
 
 /*GET invite READ*/
-router.get('/:id', function (req, res) {
+router.get('/:id', function (req, res, next) {
     InviteModel.findOne({'_id': req.params.id}, function (err, invite) {
         if (err) {
             console.error(err);
             next(err);
         } else {
             res.send(invite);
+        }
+    });
+});
+
+router.get('/activate/:id', function (req, res, next) {
+    InviteModel.verifyPasswordToken(req.params.id, Date.now(), function (err, invite) {
+        if (err) {
+            console.error(err);
+            next(err);
+        } else {
+            // find user
+            UserModel.findOne({email: invite.email}, function(err, user) {
+                if (err) {
+                    console.error(err);
+                    next(err);
+                } else {
+                    // activate user
+                    user.status = 'active';
+                    user.save( function(err, user) {
+                       if (err) {
+                           console.error(err);
+                           next(err);
+                       } else {
+                           res.send(user);
+                       }
+                    });
+                }
+            });
         }
     });
 });
