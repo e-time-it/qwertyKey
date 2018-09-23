@@ -1,6 +1,7 @@
 let express = require('express');
 let InviteModel = require('../models/invite');
 let UserModel = require('../models/user');
+let ErrorResponse = require('../lib/ErrorResponse');
 
 const router = express.Router({});
 
@@ -60,36 +61,7 @@ router.get('/activate/:id', function (req, res, next) {
 router.post('/', function (req, res, next) {
     InviteModel.create(req.body, function (err, invite) {
         if (err) {
-            if (err.errors) {
-                let errors = [];
-                for (let eName in err.errors) {
-                    let eValue = err.errors[eName];
-                    errors.push({path: eValue.path, kind: eValue.kind, message: eValue.message});
-                }
-                res.status(400).send({status: 'error', code: '1001', errors: errors});
-            } else if (err.code === 11000) {
-                res
-                    .status(400)
-                    .send({
-                        status: 'error',
-                        code: '1003',
-                        errors: [{
-                            path: 'email',
-                            kind: 'duplicate',
-                            message: err.message
-                        }]
-                    });
-            } else {
-                res.status(400).send({
-                    status: 'error',
-                    code: '1000',
-                    errors: [{
-                        path: '',
-                        kind: 'unknown',
-                        message: err.message
-                    }]
-                });
-            }
+            ErrorResponse.sendErrorRespons(err, req, res);
         } else {
             res.send(invite);
         }

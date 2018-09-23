@@ -40,7 +40,6 @@ describe('/api/user TESTS', function () {
                     expect(err).to.be.null;
                     expect(res).to.have.status(200);
                     expect(res).to.be.json;
-                    //expect(res.body['invite_id']).to.be.a('string');
                     expect(res.body._id).to.be.equal(fixedId);
                     expect(res.body.email).to.be.equal(fixedEmail);
                     //request.close();
@@ -62,7 +61,6 @@ describe('/api/user TESTS', function () {
                     expect(res).to.have.status(200);
                     expect(res).to.be.json;
                     expect(res.body._id).to.be.a('string');
-                    //request.close();
                     done();
                 });
         });
@@ -77,8 +75,7 @@ describe('/api/user TESTS', function () {
                     expect(res).to.have.status(400);
                     expect(res).to.be.json;
                     expect(res.body.status).to.be.equal('error');
-                    expect(res.body.code).to.be.equal('1001');
-                    //request.close();
+                    expect(res.body.code).to.be.equal(1001);
                     done();
                 });
         });
@@ -93,8 +90,7 @@ describe('/api/user TESTS', function () {
                     expect(res).to.have.status(400);
                     expect(res).to.be.json;
                     expect(res.body.status).to.be.equal('error');
-                    expect(res.body.code).to.be.equal('1001');
-                    //request.close();
+                    expect(res.body.code).to.be.equal(1001);
                     done();
                 });
         });
