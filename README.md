@@ -23,12 +23,12 @@ npm install
 
 Environment config:
 ```
-cp config/database-local.dist.js config/database-local
+cp config/database-local.dist.js config/database-local.js
 ```
 and edit it with your MongoDb's credentials
 
 ```
-cp ./config/mail-local.dist.js ./config/mail-local
+cp ./config/mail-local.dist.js ./config/mail-local.js
 ```
 and edit it with your SMTP's credentials
 
