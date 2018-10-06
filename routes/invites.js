@@ -34,7 +34,7 @@ router.get('/', function (req, res, next) {
 /**
  * @swagger
  *
- * /invite/:{token}:
+ * /invite/{token}:
  *   get:
  *     summary: Get a specific invite by token
  *     description: A token ...
@@ -63,7 +63,7 @@ router.get('/:id', function (req, res, next) {
 /**
  * @swagger
  *
- * /invite/activate/:{token}:
+ * /invite/activate/{token}:
  *   get:
  *     summary: Activate a user by token
  *     description: Activate, if possible, a user by token ...

@@ -10,6 +10,7 @@ const swaggerDefinition = {
         version: '1.0.0',
         description: 'API Docs',
     },
+    basePath: '/api/',
 };
 
 const options = {

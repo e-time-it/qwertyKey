@@ -30,7 +30,26 @@ router.get('/', function (req, res, next) {
     });
 });
 
-/*GET user READ*/
+/**
+ * @swagger
+ *
+ * /user/{userid}:
+ *   get:
+ *     summary: Get a specific user
+ *     description: Get an user
+ *     parameters:
+ *       - name: userid
+ *         in: path
+ *         required: true
+ *         description: userid
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: user
+ *         schema:
+ *           $ref: '#/definitions/User'
+ */
 router.get('/:id', function (req, res, next) {
     UserModel.findOne({'_id': req.params.id}, function (err, invite) {
         if (err) {
@@ -42,7 +61,27 @@ router.get('/:id', function (req, res, next) {
     });
 });
 
-/*POST user CREATE*/
+/**
+ * @swagger
+ *
+ * /user/:
+ *   post:
+ *     summary: Create an user
+ *     description: Create an user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/definitions/User'
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: user
+ *         schema:
+ *           $ref: '#/definitions/User'
+ */
 router.post('/', function (req, res, next) {
     UserModel.create(req.body, function (err, user) {
         if (err) {
