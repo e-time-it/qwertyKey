@@ -3,6 +3,24 @@ let validator = require('validator');
 let crypto = require('crypto');
 let mailer = require('../config/mail');
 
+/**
+ * @swagger
+ *
+ * definitions:
+ *   Invite:
+ *     type: object
+ *     required:
+ *       - email
+ *       - inviteType
+ *     properties:
+ *       email:
+ *         type: string
+ *       inviteType:
+ *         type: string
+ *       status:
+ *         type: string
+ */
+
 const inviteSchema = new mongoose.Schema({
     email: {
         type: String,

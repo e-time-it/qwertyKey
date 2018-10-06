@@ -4,7 +4,21 @@ let UserModel = require('../models/user');
 let InviteModel = require('../models/invite');
 let ErrorResponse = require('../lib/ErrorResponse');
 
-/* GET users listing. */
+/**
+ * @swagger
+ *
+ * /user/:
+ *   get:
+ *     summary: Get an user's list
+ *     description: Get an user's list
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: user
+ *         schema:
+ *           $ref: '#/definitions/User'
+ */
 router.get('/', function (req, res, next) {
     let query = UserModel.find();
     query.exec(function (err, invites) {

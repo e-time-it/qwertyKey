@@ -5,7 +5,21 @@ let ErrorResponse = require('../lib/ErrorResponse');
 
 const router = express.Router({});
 
-/*GET invite LIST*/
+/**
+ * @swagger
+ *
+ * /invite:
+ *   get:
+ *     summary: Get an invite's list
+ *     description: Get an invite's list
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: invite
+ *         schema:
+ *           $ref: '#/definitions/Invite'
+ */
 router.get('/', function (req, res, next) {
     let query = InviteModel.find();
     query.exec(function (err, invites) {
@@ -17,7 +31,24 @@ router.get('/', function (req, res, next) {
     });
 });
 
-/*GET invite READ*/
+/**
+ * @swagger
+ *
+ * /invite/:{token}:
+ *   get:
+ *     summary: Get a specific invite by token
+ *     description: A token ...
+ *     parameters:
+ *       - name: token
+ *         in: path
+ *         required: true
+ *         description: Token get in email
+ *     responses:
+ *       200:
+ *         description: invite
+ *         schema:
+ *           $ref: '#/definitions/Invite'
+ */
 router.get('/:id', function (req, res, next) {
     InviteModel.findOne({'_id': req.params.id}, function (err, invite) {
         if (err) {
@@ -29,6 +60,24 @@ router.get('/:id', function (req, res, next) {
     });
 });
 
+/**
+ * @swagger
+ *
+ * /invite/activate/:{token}:
+ *   get:
+ *     summary: Activate a user by token
+ *     description: Activate, if possible, a user by token ...
+ *     parameters:
+ *       - name: token
+ *         in: path
+ *         required: true
+ *         description: Token get in email
+ *     responses:
+ *       200:
+ *         description: invite
+ *         schema:
+ *           $ref: '#/definitions/User'
+ */
 router.get('/activate/:id', function (req, res, next) {
     InviteModel.verifyPasswordToken(req.params.id, Date.now(), function (err, invite) {
         if (err) {
