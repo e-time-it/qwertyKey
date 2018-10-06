@@ -4,4 +4,5 @@ node_js:
 services: mongodb
 before_script:
     - cp config/database-local.dist.js config/database-local.js
+    - cp config/mail-local.dist.js config/mail-local.js
     - mongo qwertykey --eval 'db.createUser({user:"user",pwd:"password",roles:["readWrite"]});'

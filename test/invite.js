@@ -1,10 +1,6 @@
 let mongoose = require('mongoose');
 let InviteModel = require('../models/invite');
 
-/**
- * Created by medd on 4/4/18.
- */
-
 const fixedId = '507f191e810c19729de860ea';
 const fixedEmail = 'testemail@qk.com';
 
@@ -77,7 +73,7 @@ describe('/api/invite TESTS', function () {
                     expect(res).to.have.status(400);
                     expect(res).to.be.json;
                     expect(res.body.status).to.be.equal('error');
-                    expect(res.body.code).to.be.equal('1001');
+                    expect(res.body.code).to.be.equal(1001);
                     //request.close();
                     done();
                 });
@@ -92,8 +88,24 @@ describe('/api/invite TESTS', function () {
                     expect(res).to.have.status(400);
                     expect(res).to.be.json;
                     expect(res.body.status).to.be.equal('error');
-                    expect(res.body.code).to.be.equal('1001');
+                    expect(res.body.code).to.be.equal(1001);
                     //request.close();
+                    done();
+                });
+        });
+        it('create a new invite with an already existing email', function (done) {
+            request
+                .post('/api/invite')
+                .send({
+                    'email': fixedEmail
+                })
+                .end(function (err, res) {
+                    expect(res).to.have.status(400);
+                    expect(res).to.be.json;
+                    expect(res.body.status).to.be.equal('error');
+                    expect(res.body.code).to.be.equal(1003);
+                    expect(res.body.errors).to.be.an.instanceOf(Array);
+                    expect(res.body.errors[0].kind).to.be.equal('duplicate');
                     done();
                 });
         });

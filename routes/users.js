@@ -1,8 +1,24 @@
 let express = require('express');
 let router = express.Router();
 let UserModel = require('../models/user');
+let InviteModel = require('../models/invite');
+let ErrorResponse = require('../lib/ErrorResponse');
 
-/* GET users listing. */
+/**
+ * @swagger
+ *
+ * /user/:
+ *   get:
+ *     summary: Get an user's list
+ *     description: Get an user's list
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: user
+ *         schema:
+ *           $ref: '#/definitions/User'
+ */
 router.get('/', function (req, res, next) {
     let query = UserModel.find();
     query.exec(function (err, invites) {
@@ -14,7 +30,26 @@ router.get('/', function (req, res, next) {
     });
 });
 
-/*GET user READ*/
+/**
+ * @swagger
+ *
+ * /user/{userid}:
+ *   get:
+ *     summary: Get a specific user
+ *     description: Get an user
+ *     parameters:
+ *       - name: userid
+ *         in: path
+ *         required: true
+ *         description: userid
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: user
+ *         schema:
+ *           $ref: '#/definitions/User'
+ */
 router.get('/:id', function (req, res, next) {
     UserModel.findOne({'_id': req.params.id}, function (err, invite) {
         if (err) {
@@ -26,45 +61,44 @@ router.get('/:id', function (req, res, next) {
     });
 });
 
-/*POST user CREATE*/
+/**
+ * @swagger
+ *
+ * /user/:
+ *   post:
+ *     summary: Create an user
+ *     description: Create an user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/definitions/User'
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: user
+ *         schema:
+ *           $ref: '#/definitions/User'
+ */
 router.post('/', function (req, res, next) {
     UserModel.create(req.body, function (err, user) {
         if (err) {
-            if (err.errors) {
-                let errors = [];
-                for (let eName in err.errors) {
-                    let eValue = err.errors[eName];
-                    errors.push({path: eValue.path, kind: eValue.kind, message: eValue.message});
-                }
-                res.status(400).send({status: 'error', code: '1001', errors: errors});
-            } else if (err.code === 11000) {
-                res
-                    .status(400)
-                    .send({
-                        status: 'error',
-                        code: '1003',
-                        errors: [{
-                            path: 'email',
-                            kind: 'duplicate',
-                            message: err.message
-                        }]
-                    });
-            } else {
-                res.status(400).send({
-                    status: 'error',
-                    code: '1000',
-                    errors: [{
-                        path: '',
-                        kind: 'unknown',
-                        message: err.message
-                    }]
-                });
-            }
+           ErrorResponse.sendErrorRespons(err, req, res);
         } else {
-            res.send(user);
+            InviteModel.create({
+                email: user.email,
+                inviteType: 'selfRegistration'
+            }, function(err, invite) {
+                if (err) {
+                    ErrorResponse.sendErrorRespons(err, req, res);
+                } else {
+                    res.send(user);
+                }
+            });
         }
     });
 });
-
 
 module.exports = router;

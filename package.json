@@ -1,36 +1,42 @@
 {
-  "name": "qwertykey",
-  "version": "0.0.0",
-  "private": true,
-  "scripts": {
-    "prestart": "node buildScripts/startMessage.js",
-    "start": "./node_modules/.bin/npm-run-all --parallel security-check start-server",
-    "start-server": "node ./bin/www",
-    "test": "cross-env NODE_ENV=test mocha --exit  test/**/*.js",
-    "security-check": "nsp check",
-    "share": "lt --port 3000"
-  },
-  "dependencies": {
-    "bcrypt": "^3.0.0",
-    "body-parser": "^1.18.3",
-    "chalk": "^2.4.1",
-    "cookie-parser": "^1.4.3",
-    "debug": "^2.6.9",
-    "express": "^4.16.3",
-    "mongoose": "^5.0.17",
-    "morgan": "^1.9.0",
-    "serve-favicon": "^2.5.0",
-    "uuid": "^3.3.2",
-    "validator": "^10.4.0"
-  },
-  "devDependencies": {
-    "chai": "^4.1.2",
-    "chai-http": "^4.0.0",
-    "cross-env": "^5.2.0",
-    "mocha": "^5.0.5",
-    "npm-run-all": "^4.1.3",
-    "nsp": "^3.2.1",
-    "nyc": "^13.0.1",
-    "request": "^2.85.0"
-  }
+    "name": "qwertykey",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+        "prestart": "node buildScripts/startMessage.js",
+        "start": "./node_modules/.bin/npm-run-all --parallel security-check start-server",
+        "start-server": "node ./bin/www",
+        "test": "cross-env NODE_ENV=test mocha --exit  test/**/*.js",
+        "security-check": "npm audit",
+        "share": "lt --port 3000"
+    },
+    "dependencies": {
+        "bcrypt": "^3.0.0",
+        "body-parser": "^1.18.3",
+        "chalk": "^2.4.1",
+        "cookie-parser": "^1.4.3",
+        "crypto": "^1.0.1",
+        "debug": "^4.0.1",
+        "express": "^4.16.3",
+        "mongodb": "latest",
+        "mongoose": "^5.2.15",
+        "morgan": "^1.9.1",
+        "nodemailer": "^4.6.8",
+        "serve-favicon": "^2.5.0",
+        "swagger-jsdoc": "^3.2.3",
+        "swagger-ui-express": "^4.0.1",
+        "uuid": "^3.3.2",
+        "validator": "^10.7.1"
+    },
+    "devDependencies": {
+        "chai": "^4.1.2",
+        "chai-http": "^4.2.0",
+        "cross-env": "^5.2.0",
+        "mocha": "^5.0.5",
+        "mockery": "^2.1.0",
+        "nodemailer-mock": "^1.3.14",
+        "npm-run-all": "^4.1.3",
+        "nyc": "^13.0.1",
+        "request": "^2.88.0"
+    }
 }

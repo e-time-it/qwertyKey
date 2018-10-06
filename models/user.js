@@ -3,6 +3,23 @@ let validator = require('validator');
 let bcrypt = require('bcrypt');
 const SALT_WORK_FACTOR = 10;
 
+
+
+/**
+ * @swagger
+ *
+ * definitions:
+ *   User:
+ *     type: object
+ *     required:
+ *       - email
+ *       - status
+ *     properties:
+ *       email:
+ *         type: string
+ *       status:
+ *         type: string
+ */
 const userSchema = mongoose.Schema({
     email: {
         type: String,
@@ -16,6 +33,11 @@ const userSchema = mongoose.Schema({
             message: 'email must be valid',
             type: 'valid'
         }
+    },
+    status: {
+        type: String,
+        enum: ['new', 'active', 'cancel'],
+        default: 'new'
     },
     password: {
         type: String,

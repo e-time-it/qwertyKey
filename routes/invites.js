@@ -1,9 +1,25 @@
 let express = require('express');
 let InviteModel = require('../models/invite');
+let UserModel = require('../models/user');
+let ErrorResponse = require('../lib/ErrorResponse');
 
 const router = express.Router({});
 
-/*GET invite LIST*/
+/**
+ * @swagger
+ *
+ * /invite:
+ *   get:
+ *     summary: Get an invite's list
+ *     description: Get an invite's list
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: invite
+ *         schema:
+ *           $ref: '#/definitions/Invite'
+ */
 router.get('/', function (req, res, next) {
     let query = InviteModel.find();
     query.exec(function (err, invites) {
@@ -15,8 +31,25 @@ router.get('/', function (req, res, next) {
     });
 });
 
-/*GET invite READ*/
-router.get('/:id', function (req, res) {
+/**
+ * @swagger
+ *
+ * /invite/{token}:
+ *   get:
+ *     summary: Get a specific invite by token
+ *     description: A token ...
+ *     parameters:
+ *       - name: token
+ *         in: path
+ *         required: true
+ *         description: Token get in email
+ *     responses:
+ *       200:
+ *         description: invite
+ *         schema:
+ *           $ref: '#/definitions/Invite'
+ */
+router.get('/:id', function (req, res, next) {
     InviteModel.findOne({'_id': req.params.id}, function (err, invite) {
         if (err) {
             console.error(err);
@@ -27,40 +60,57 @@ router.get('/:id', function (req, res) {
     });
 });
 
+/**
+ * @swagger
+ *
+ * /invite/activate/{token}:
+ *   get:
+ *     summary: Activate a user by token
+ *     description: Activate, if possible, a user by token ...
+ *     parameters:
+ *       - name: token
+ *         in: path
+ *         required: true
+ *         description: Token get in email
+ *     responses:
+ *       200:
+ *         description: invite
+ *         schema:
+ *           $ref: '#/definitions/User'
+ */
+router.get('/activate/:id', function (req, res, next) {
+    InviteModel.verifyPasswordToken(req.params.id, Date.now(), function (err, invite) {
+        if (err) {
+            console.error(err);
+            next(err);
+        } else {
+            // find user
+            UserModel.findOne({email: invite.email}, function(err, user) {
+                if (err) {
+                    console.error(err);
+                    next(err);
+                } else {
+                    // activate user
+                    user.status = 'active';
+                    user.save( function(err, user) {
+                       if (err) {
+                           console.error(err);
+                           next(err);
+                       } else {
+                           res.send(user);
+                       }
+                    });
+                }
+            });
+        }
+    });
+});
+
 /*POST invite CREATE*/
 router.post('/', function (req, res, next) {
     InviteModel.create(req.body, function (err, invite) {
         if (err) {
-            if (err.errors) {
-                let errors = [];
-                for (let eName in err.errors) {
-                    let eValue = err.errors[eName];
-                    errors.push({path: eValue.path, kind: eValue.kind, message: eValue.message});
-                }
-                res.status(400).send({status: 'error', code: '1001', errors: errors});
-            } else if (err.code === 11000) {
-                res
-                    .status(400)
-                    .send({
-                        status: 'error',
-                        code: '1003',
-                        errors: [{
-                            path: 'email',
-                            kind: 'duplicate',
-                            message: err.message
-                        }]
-                    });
-            } else {
-                res.status(400).send({
-                    status: 'error',
-                    code: '1000',
-                    errors: [{
-                        path: '',
-                        kind: 'unknown',
-                        message: err.message
-                    }]
-                });
-            }
+            ErrorResponse.sendErrorRespons(err, req, res);
         } else {
             res.send(invite);
         }
