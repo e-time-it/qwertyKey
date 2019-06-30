@@ -1,7 +1,6 @@
 let express = require('express');
 let InviteModel = require('../models/invite');
 let UserModel = require('../models/user');
-let ErrorResponse = require('../lib/ErrorResponse');
 
 const router = express.Router({});
 
@@ -20,15 +19,13 @@ const router = express.Router({});
  *         schema:
  *           $ref: '#/definitions/Invite'
  */
-router.get('/', function (req, res, next) {
-    let query = InviteModel.find();
-    query.exec(function (err, invites) {
-        if (err) {
-            next(err);
-        } else {
-            res.send(invites);
-        }
-    });
+router.get('/', async function (req, res, next) {
+    try {
+        const invites = await InviteModel.find().exec();
+        res.send(invites);
+    } catch (err) {
+        next(err);
+    }
 });
 
 /**
@@ -49,15 +46,13 @@ router.get('/', function (req, res, next) {
  *         schema:
  *           $ref: '#/definitions/Invite'
  */
-router.get('/:id', function (req, res, next) {
-    InviteModel.findOne({'_id': req.params.id}, function (err, invite) {
-        if (err) {
-            console.error(err);
-            next(err);
-        } else {
-            res.send(invite);
-        }
-    });
+router.get('/:id', async function (req, res, next) {
+    try {
+        const invite = await InviteModel.findOne({'_id': req.params.id}).exec();
+        res.send(invite);
+    } catch (err) {
+        next(err);
+    }
 });
 
 /**
@@ -78,43 +73,62 @@ router.get('/:id', function (req, res, next) {
  *         schema:
  *           $ref: '#/definitions/User'
  */
-router.get('/activate/:id', function (req, res, next) {
-    InviteModel.verifyPasswordToken(req.params.id, Date.now(), function (err, invite) {
-        if (err) {
-            console.error(err);
-            next(err);
-        } else {
-            // find user
-            UserModel.findOne({email: invite.email}, function(err, user) {
-                if (err) {
-                    console.error(err);
-                    next(err);
-                } else {
-                    // activate user
-                    user.status = 'active';
-                    user.save( function(err, user) {
-                       if (err) {
-                           console.error(err);
-                           next(err);
-                       } else {
-                           res.send(user);
-                       }
-                    });
-                }
-            });
-        }
-    });
+router.get('/activate/:id', async function (req, res, next) {
+    try {
+        const invite = await InviteModel.verifyPasswordToken(req.params.id, Date.now());
+        let  user = await UserModel.findOne({email: invite.email}).exec();
+        user.status = 'active';
+        user = await user.save();
+        res.send(user);
+    } catch (err) {
+        next(err);
+    }
 });
 
-/*POST invite CREATE*/
-router.post('/', function (req, res, next) {
-    InviteModel.create(req.body, function (err, invite) {
-        if (err) {
-            ErrorResponse.sendErrorRespons(err, req, res);
-        } else {
-            res.send(invite);
-        }
-    });
+router.post('/:id/activate', async function (req, res, next) {
+    try {
+        const invite = await InviteModel.verifyPasswordToken(req.params.id, Date.now());
+        let user = await UserModel.findOne({email: invite.email});
+        user.status = 'active';
+        user = await user.save();
+        res.send(user);
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+});
+
+/**
+ * @swagger
+ *
+ * /invite:
+ *   post:
+ *     summary: create an invite
+ *     description: Create a new invite
+ *     consumes:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: invite
+ *         description: the invite to create
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/Invite'
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: the new invite
+ *         schema:
+ *           $ref: '#/definitions/Invite'
+ */
+router.post('/', async function (req, res, next) {
+    try {
+        const invite = await InviteModel.create(req.body);
+        res.send(invite);
+    } catch (err) {
+        next(err);
+    }
 });
 
 /*PUT invite UPDATE*/
