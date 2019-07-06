@@ -10,6 +10,7 @@ class Database {
         mongoose.connect(`mongodb://${dbConfig.dbuser}:${dbConfig.dbpass}@${dbConfig.server}/${dbConfig.database}`, {useNewUrlParser: true})
             .then(() => {
                 console.log('Database connection successful');
+                mongoose.set('useCreateIndex', true);
             })
             .catch(err => {
                 console.error('Database connection error;', err);

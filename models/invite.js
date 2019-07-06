@@ -1,7 +1,9 @@
-let mongoose = require('mongoose');
-let validator = require('validator');
-let crypto = require('crypto');
-let mailer = require('../config/mail');
+const mongoose = require('mongoose');
+const validator = require('validator');
+const crypto = require('crypto');
+const mailer = require('../config/mail');
+
+mongoose.set('useCreateIndex', true);
 
 /**
  * @swagger

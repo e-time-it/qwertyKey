@@ -1,20 +1,11 @@
-let mongoose = require('mongoose');
-let InviteModel = require('../models/invite');
-
 const fixedId = '507f191e810c19729de860ea';
 const fixedEmail = 'testemail@qk.com';
 
 describe('/api/invite TESTS', function () {
 
-    before(async function () {
-        let invite = await InviteModel.findOne({email: fixedEmail});
-        if (!invite) {
-            invite = new InviteModel({
-                _id: mongoose.Types.ObjectId(fixedId),
-                email: fixedEmail
-            });
-            await invite.save();
-        }
+    beforeEach(async function () {
+        const inviteFixture = require('../fixtures/invites');
+        await inviteFixture.resetAndLoad();
     });
 
     describe('GET /api/invite', function () {
