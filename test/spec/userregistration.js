@@ -38,7 +38,7 @@ describe('User registration', function () {
 
         it('The user activate the himself opening the invite link', function(done) {
             request
-                .get('/api/invite/activate/' + resetToken)
+                .post('/api/invite/' + resetToken + '/activate/')
                 .end(function(err, res) {
                     expect(err).to.be.null;
                     expect(res).to.have.status(200);

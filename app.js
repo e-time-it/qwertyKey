@@ -8,7 +8,7 @@ require('./config/database');
 let index = require('./routes/index');
 let users = require('./routes/users');
 let invites = require('./routes/invites');
-let ErrorResponse = require('./lib/ErrorResponse');
+let errorResponse = require('./lib/ErrorResponse');
 
 const app = express();
 
@@ -32,8 +32,9 @@ app.use(function (req, res, next) {
 });
 
 // error handler
-app.use(function (err, req, res) {
-    ErrorResponse.sendErrorRespons(err, req, res);
+// noinspection JSUnusedLocalSymbols
+app.use(function (err, req, res, next) {
+    errorResponse.sendErrorResponse(err, req, res);
 });
 
 module.exports = app;

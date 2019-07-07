@@ -1,7 +1,9 @@
-let mongoose = require('mongoose');
-let validator = require('validator');
-let crypto = require('crypto');
-let mailer = require('../config/mail');
+const mongoose = require('mongoose');
+const validator = require('validator');
+const crypto = require('crypto');
+const mailer = require('../config/mail');
+
+mongoose.set('useCreateIndex', true);
 
 /**
  * @swagger
@@ -69,14 +71,26 @@ inviteSchema.post('save', function (invite, next) {
 });
 
 inviteSchema.statics.verifyPasswordToken = function (token, time = Date.now(), cb) {
-    this.findOne({'resetPasswordToken': token}, function (err, invite) {
-        if (err) cb(err);
-        if (invite.resetPasswordExpires >= time) {
-            cb(null, invite);
-        } else {
-            cb (new Error("Reset password token expired"), null);
-        }
+    let verifiedPassword = new Promise((resolve,reject) => {
+        this.findOne({'resetPasswordToken': token}).then(invite => {
+            if (invite.resetPasswordExpires >= time) {
+                resolve(invite);
+            } else {
+                reject(new Error("Reset password token expired"));
+            }
+        }).catch(err => {
+            reject(err);
+        });
     });
+    if (cb) {
+        verifiedPassword.then((invite) => {
+            cb(null, invite);
+        }).catch(err => {
+            cb(err, null);
+        })
+    }
+
+    return verifiedPassword;
 };
 
 module.exports = mongoose.model('Invite', inviteSchema);

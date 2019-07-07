@@ -1,16 +1,18 @@
 
-let chai = require('chai');
-let chaiHttp = require('chai-http');
-let uuid = require('uuid');
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const uuid = require('uuid');
 
-let mockery = require('mockery');
-let nodemailerMock = require('nodemailer-mock');
+const mockery = require('mockery');
+const nodemailerMock = require('nodemailer-mock');
 mockery.enable({
     warnOnUnregistered: false
 });
 mockery.registerMock('nodemailer', nodemailerMock);
+const databaseTestLocal = require('./database-local');
+mockery.registerMock('./database-local', databaseTestLocal);
 
-let app = require('../app.js');
+const app = require('../app.js');
 
 chai.use(chaiHttp);
 

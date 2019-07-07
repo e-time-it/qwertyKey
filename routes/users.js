@@ -2,7 +2,6 @@ let express = require('express');
 let router = express.Router();
 let UserModel = require('../models/user');
 let InviteModel = require('../models/invite');
-let ErrorResponse = require('../lib/ErrorResponse');
 
 /**
  * @swagger
@@ -19,29 +18,27 @@ let ErrorResponse = require('../lib/ErrorResponse');
  *         schema:
  *           $ref: '#/definitions/User'
  */
-router.get('/', function (req, res, next) {
-    let query = UserModel.find();
-    query.exec(function (err, invites) {
-        if (err) {
-            next(err);
-        } else {
-            res.send(invites);
-        }
-    });
+router.get('/',  async function (req, res, next) {
+    try {
+        const invites = await UserModel.find().exec();
+        res.send(invites);
+    } catch (err) {
+        next(err);
+    }
 });
 
 /**
  * @swagger
  *
- * /user/{userid}:
+ * /user/{userId}:
  *   get:
  *     summary: Get a specific user
  *     description: Get an user
  *     parameters:
- *       - name: userid
+ *       - name: userId
  *         in: path
  *         required: true
- *         description: userid
+ *         description: userId
  *     produces:
  *       - application/json
  *     responses:
@@ -50,55 +47,48 @@ router.get('/', function (req, res, next) {
  *         schema:
  *           $ref: '#/definitions/User'
  */
-router.get('/:id', function (req, res, next) {
-    UserModel.findOne({'_id': req.params.id}, function (err, invite) {
-        if (err) {
-            console.error(err);
-            next(err);
-        } else {
-            res.send(invite);
-        }
-    });
+router.get('/:id', async function (req, res, next) {
+    try {
+        const invite = await UserModel.findOne({'_id': req.params.id}).exec();
+        res.send(invite);
+    } catch (err) {
+        next(err);
+    }
 });
 
 /**
  * @swagger
  *
- * /user/:
+ * /user:
  *   post:
  *     summary: Create an user
  *     description: Create an user
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/definitions/User'
- *     produces:
+ *     consumes:
  *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: user
+ *         description: the user to create
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/User'
  *     responses:
- *       200:
- *         description: user
+ *       201:
+ *         description: the newly created user
  *         schema:
  *           $ref: '#/definitions/User'
  */
-router.post('/', function (req, res, next) {
-    UserModel.create(req.body, function (err, user) {
-        if (err) {
-           ErrorResponse.sendErrorRespons(err, req, res);
-        } else {
-            InviteModel.create({
-                email: user.email,
-                inviteType: 'selfRegistration'
-            }, function(err, invite) {
-                if (err) {
-                    ErrorResponse.sendErrorRespons(err, req, res);
-                } else {
-                    res.send(user);
-                }
-            });
-        }
-    });
+router.post('/', async function (req, res, next) {
+    try {
+        const user = await UserModel.create(req.body);
+        await InviteModel.create({
+            email: user.email,
+            inviteType: 'selfRegistration'
+        });
+        res.send(user);
+    } catch (err) {
+        next(err);
+    }
 });
 
 module.exports = router;

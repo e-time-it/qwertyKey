@@ -1,22 +1,12 @@
-let mongoose = require('mongoose');
-let UserModel = require('../models/user');
 
 const fixedId = '507f191e810c19729de860ee';
 const fixedEmail = 'testemail@qk.com';
-const fixedPassword = 'dk470S..e!sdjDs37d';
 
 describe('/api/user TESTS', function () {
 
     before(async function () {
-        let user = await UserModel.findOne({email: fixedEmail});
-        if (!user) {
-            user = new UserModel({
-                _id: mongoose.Types.ObjectId(fixedId),
-                email: fixedEmail,
-                password: fixedPassword
-            });
-            await user.save();
-        }
+        const usersFixture = require('../fixtures/users');
+        await usersFixture.resetAndLoad();
     });
 
     describe('GET /api/user', function () {
