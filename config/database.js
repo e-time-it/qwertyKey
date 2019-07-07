@@ -16,6 +16,15 @@ class Database {
                 console.error('Database connection error;', err);
             });
     }
+
+    // noinspection JSMethodCanBeStatic
+    /**
+     *
+     * @return {Connection}
+     */
+    getConnection() {
+        return mongoose.connection;
+    }
 }
 
 module.exports = new Database();

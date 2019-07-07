@@ -13,9 +13,12 @@ mongoose.set('useCreateIndex', true);
  *     type: object
  *     required:
  *       - email
+ *       - from
  *       - inviteType
  *     properties:
  *       email:
+ *         type: string
+ *       from:
  *         type: string
  *       inviteType:
  *         type: string
@@ -27,7 +30,18 @@ const inviteSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
-        unique: true,
+        lowercase: true,
+        validate: {
+            validator: (value) => {
+                return validator.isEmail(value)
+            },
+            message: 'email must be valid',
+            type: 'valid'
+        }
+    },
+    from: {
+        type: String,
+        required: true,
         lowercase: true,
         validate: {
             validator: (value) => {
@@ -51,6 +65,7 @@ const inviteSchema = new mongoose.Schema({
     resetPasswordExpires: Date
 });
 
+// noinspection JSUnresolvedFunction
 inviteSchema.pre('save', function (next) {
     let invite = this;
     crypto.randomBytes(20, (err, buf) => {
@@ -65,7 +80,7 @@ inviteSchema.post('save', function (invite, next) {
         from: 'qk@qk.org',
         to: invite.email,
         subject: 'Invite QK',
-        text: `You received an invite to partecipate to QK party: ${invite.resetPasswordToken}`
+        text: `You received an invite from ${invite.from} to participate to QK party: ${invite.resetPasswordToken}`
     }).then(() => {next()}).catch(err => console.error('Fail to send mail: ', err));
 
 });

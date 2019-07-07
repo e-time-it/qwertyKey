@@ -15,7 +15,6 @@ describe('/api/invite TESTS', function () {
                     expect(err).to.be.null;
                     expect(res).to.have.status(200);
                     expect(res).to.be.json;
-                    //request.close();
                     done();
                 });
         });
@@ -29,10 +28,8 @@ describe('/api/invite TESTS', function () {
                     expect(err).to.be.null;
                     expect(res).to.have.status(200);
                     expect(res).to.be.json;
-                    //expect(res.body['invite_id']).to.be.a('string');
                     expect(res.body._id).to.be.equal(fixedId);
                     expect(res.body.email).to.be.equal(fixedEmail);
-                    //request.close();
                     done();
                 });
         });
@@ -43,14 +40,13 @@ describe('/api/invite TESTS', function () {
             request
                 .post('/api/invite')
                 .send({
-                    'email': 'test' + Math.random() + '@qk.com'
+                    'email': 'test' + Math.random() + '@qk.com',
+                    'from': 'test' + Math.random() + '@qk.com'
                 })
                 .end(function (err, res) {
                     expect(err).to.be.null;
                     expect(res).to.have.status(200);
                     expect(res).to.be.json;
-                    //expect(res.body.invite_id).to.be.a('string');
-                    //request.close();
                     done();
                 });
         });
@@ -58,14 +54,14 @@ describe('/api/invite TESTS', function () {
             request
                 .post('/api/invite')
                 .send({
-                    'email': ''
+                    'email': '',
+                    'from': 'test' + Math.random() + '@qk.com'
                 })
                 .end(function (err, res) {
                     expect(res).to.have.status(400);
                     expect(res).to.be.json;
                     expect(res.body.status).to.be.equal('error');
                     expect(res.body.code).to.be.equal(1001);
-                    //request.close();
                     done();
                 });
         });
@@ -73,14 +69,14 @@ describe('/api/invite TESTS', function () {
             request
                 .post('/api/invite')
                 .send({
-                    'email': 'invalidEmail#123'
+                    'email': 'invalidEmail#123',
+                    'from': 'test' + Math.random() + '@qk.com'
                 })
                 .end(function (err, res) {
                     expect(res).to.have.status(400);
                     expect(res).to.be.json;
                     expect(res.body.status).to.be.equal('error');
                     expect(res.body.code).to.be.equal(1001);
-                    //request.close();
                     done();
                 });
         });
@@ -88,15 +84,13 @@ describe('/api/invite TESTS', function () {
             request
                 .post('/api/invite')
                 .send({
-                    'email': fixedEmail
+                    'email': fixedEmail,
+                    'from': 'test' + Math.random() + '@qk.com'
                 })
                 .end(function (err, res) {
-                    expect(res).to.have.status(400);
+                    expect(err).to.be.null;
+                    expect(res).to.have.status(200);
                     expect(res).to.be.json;
-                    expect(res.body.status).to.be.equal('error');
-                    expect(res.body.code).to.be.equal(1003);
-                    expect(res.body.errors).to.be.an.instanceOf(Array);
-                    expect(res.body.errors[0].kind).to.be.equal('duplicate');
                     done();
                 });
         });
@@ -112,7 +106,6 @@ describe('/api/invite TESTS', function () {
                 .end(function (err, res) {
                     expect(err).to.be.null;
                     expect(res).to.have.status(404);
-                    //request.close();
                     done();
                 });
         });
@@ -125,7 +118,6 @@ describe('/api/invite TESTS', function () {
                 .end(function (err, res) {
                     expect(err).to.be.null;
                     expect(res).to.have.status(404);
-                    //request.close();
                     done();
                 });
         });

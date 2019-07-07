@@ -4,13 +4,26 @@ let path = require('path');
 let logger = require('morgan');
 let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
-require('./config/database');
+
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
+
+const database = require('./config/database');
 let index = require('./routes/index');
 let users = require('./routes/users');
 let invites = require('./routes/invites');
 let errorResponse = require('./lib/ErrorResponse');
 
 const app = express();
+
+app.use(session({
+    secret: 'qwerty key secret',
+    resave: false,
+    saveUninitialized: true,
+    store: new MongoStore({
+        mongooseConnection: database.getConnection()
+    })
+}));
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));

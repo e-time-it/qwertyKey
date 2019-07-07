@@ -16,7 +16,6 @@ describe('/api/user TESTS', function () {
                     expect(err).to.be.null;
                     expect(res).to.have.status(200);
                     expect(res).to.be.json;
-                    //request.close();
                     done();
                 });
         });
@@ -32,7 +31,6 @@ describe('/api/user TESTS', function () {
                     expect(res).to.be.json;
                     expect(res.body._id).to.be.equal(fixedId);
                     expect(res.body.email).to.be.equal(fixedEmail);
-                    //request.close();
                     done();
                 });
         });
@@ -81,6 +79,23 @@ describe('/api/user TESTS', function () {
                     expect(res).to.be.json;
                     expect(res.body.status).to.be.equal('error');
                     expect(res.body.code).to.be.equal(1001);
+                    done();
+                });
+        });
+        it('create a new user with an already existing email', function (done) {
+            request
+                .post('/api/user')
+                .send({
+                    'email': fixedEmail,
+                    'password': 'test' +  Math.random()
+                })
+                .end(function (err, res) {
+                    expect(res).to.have.status(400);
+                    expect(res).to.be.json;
+                    expect(res.body.status).to.be.equal('error');
+                    expect(res.body.code).to.be.equal(1003);
+                    expect(res.body.errors).to.be.an.instanceOf(Array);
+                    expect(res.body.errors[0].kind).to.be.equal('duplicate');
                     done();
                 });
         });

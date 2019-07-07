@@ -83,6 +83,7 @@ router.post('/', async function (req, res, next) {
         const user = await UserModel.create(req.body);
         await InviteModel.create({
             email: user.email,
+            from: user.email,
             inviteType: 'selfRegistration'
         });
         res.send(user);

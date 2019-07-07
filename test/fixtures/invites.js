@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const InviteModel = require('../../models/invite');
 const { ObjectID: ObjectId } = require('mongodb');
 
@@ -12,6 +11,7 @@ const data = [
         _id: ObjectId(fixedId),
         "inviteType": "friend",
         "email": fixedEmail,
+        'from': 'friendOf' + fixedEmail,
         "resetPasswordToken": "504e9738a8d2eec5a9c70545b3043f7821222ab9",
         "resetPasswordExpires": resetPasswordExpire1Day,
     },
@@ -19,6 +19,7 @@ const data = [
         _id: ObjectId(),
         "inviteType": "friend",
         "email": 'otherEmail@qk.com',
+        'from': 'friendOf' + 'otherEmail@qk.com',
         "resetPasswordToken": "504e9738a8d2eec5a9c70545b3043f7821222aba",
         "resetPasswordExpires": resetPasswordExpire1Day,
     }
