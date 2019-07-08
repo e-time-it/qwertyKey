@@ -1,18 +1,19 @@
-let express = require('express');
-let path = require('path');
+const express = require('express');
+const path = require('path');
 //var favicon = require('serve-favicon');
-let logger = require('morgan');
-let cookieParser = require('cookie-parser');
-let bodyParser = require('body-parser');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 
 const database = require('./config/database');
-let index = require('./routes/index');
-let users = require('./routes/users');
-let invites = require('./routes/invites');
-let errorResponse = require('./lib/ErrorResponse');
+const index = require('./routes/index');
+const users = require('./routes/users');
+const invites = require('./routes/invites');
+const errorResponse = require('./lib/ErrorResponse');
+const security = require('./lib/Security');
 
 const app = express();
 
@@ -32,6 +33,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(security.checkAuth);
 
 app.use('/', index);
 app.use('/api/user', users);
