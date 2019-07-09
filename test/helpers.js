@@ -12,6 +12,12 @@ mockery.registerMock('nodemailer', nodemailerMock);
 const databaseTestLocal = require('./database-local');
 mockery.registerMock('./database-local', databaseTestLocal);
 
+mockery.registerMock('./lib/Security', {
+    checkAuth: function(req, res, next) {
+        next();
+    }
+});
+
 const app = require('../app.js');
 
 chai.use(chaiHttp);
