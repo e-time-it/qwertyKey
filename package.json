@@ -11,7 +11,7 @@
         "share": "lt --port 3000"
     },
     "dependencies": {
-        "bcrypt": "^3.0.6",
+        "bcrypt": "^5.0.0",
         "body-parser": "^1.19.0",
         "chalk": "^2.4.2",
         "cookie-parser": "^1.4.4",
